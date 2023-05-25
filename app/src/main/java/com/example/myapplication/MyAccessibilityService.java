@@ -3,9 +3,11 @@ package com.example.myapplication;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Parcelable;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -26,19 +28,24 @@ public class MyAccessibilityService extends AccessibilityService {
 
         }else {
             String packageName = accessibilityEvent.getPackageName().toString();
-            PackageManager packageManager = this.getPackageManager();
-            try {
-                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-                CharSequence applicationLabel = packageManager.getApplicationLabel(applicationInfo);
-                String log = "Message: " + accessibilityEvent.getText().get(0)
-                        + " [App Name: " + applicationLabel + "]";
-                sendMessageToBE(accessibilityEvent.getText().get(0).toString(), applicationLabel.toString());
-                Log.e(TAG, log);
-
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.e(TAG, e.toString());
-//                e.printStackTrace();
-            }
+            Log.e(TAG, packageName);
+            String text = accessibilityEvent.getText().get(0).toString();
+            Intent intent = new Intent(getApplicationContext(), TextToSpeechService.class);
+            intent.putExtra("text", text);
+            startService(intent);
+//            PackageManager packageManager = this.getPackageManager();
+//            try {
+//                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+//                CharSequence applicationLabel = packageManager.getApplicationLabel(applicationInfo);
+//                String log = "Message: " + accessibilityEvent.getText().get(0)
+//                        + " [App Name: " + applicationLabel + "]";
+//                sendMessageToBE(accessibilityEvent.getText().get(0).toString(), applicationLabel.toString());
+//                Log.e(TAG, log);
+//
+//            } catch (PackageManager.NameNotFoundException e) {
+//                Log.e(TAG, e.toString());
+////                e.printStackTrace();
+//            }
         }
     }
 
