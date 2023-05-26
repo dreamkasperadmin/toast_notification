@@ -29,10 +29,12 @@ public class MyAccessibilityService extends AccessibilityService {
         }else {
             String packageName = accessibilityEvent.getPackageName().toString();
             Log.e(TAG, packageName);
-            String text = accessibilityEvent.getText().get(0).toString();
-            Intent intent = new Intent(getApplicationContext(), TextToSpeechService.class);
-            intent.putExtra("text", text);
-            startService(intent);
+            if(accessibilityEvent.getClassName().toString().toLowerCase().contains("toast")) {
+                String text = accessibilityEvent.getText().get(0).toString();
+                Intent intent = new Intent(getApplicationContext(), TextToSpeechService.class);
+                intent.putExtra("text", text);
+                startService(intent);
+            }
 //            PackageManager packageManager = this.getPackageManager();
 //            try {
 //                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, 0);
