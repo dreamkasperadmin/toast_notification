@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,28 +28,27 @@ public class AccessibilityServiceChangeListener implements AccessibilityManager.
         // Handle the accessibility service state change
         AccessibilityManager accessibilityManager = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
         List<AccessibilityServiceInfo> enabledServices = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
-        List<String> activeService = Collections.<String>emptyList();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = context.getSharedPreferences("notification_prefs", Context.MODE_PRIVATE);
         List<String> prevActiveServices = Collections.singletonList(preferences.getString("notification_prefs", ""));
-        Log.e("LIST", prevActiveServices.toString());
+        Log.e("LIST1:", prevActiveServices.toString());
+
+        List<String> activeService = new ArrayList<>();
         for (AccessibilityServiceInfo service : enabledServices) {
             // Print or store information about each active accessibility service
             String packageName = service.getResolveInfo().serviceInfo.packageName;
-            activeService.add(packageName);
-            Log.d("Active Service", "Package Name: " + packageName );
+            boolean isAdded = activeService.add(new String(packageName));
+            Log.e("Active Service", "Package Name: " + packageName );
         }
-
-        if(activeService.isEmpty()){
+        Log.e("LIST2", activeService.toString());
+        if(activeService.isEmpty() && prevActiveServices.contains("com.example.myapplication")){
             // send notification
-            if(prevActiveServices != activeService) {
-                Intent serviceIntent = new Intent(context, NotificationService.class);
-                serviceIntent.putExtra("msg", "Toast detection service disabled");
-                context.startService(serviceIntent);
-            }
+            Intent serviceIntent = new Intent(context, NotificationService.class);
+            serviceIntent.putExtra("msg", "Toast detection service disabled");
+            context.startService(serviceIntent);
         }else{
            boolean isMyServiceActive = activeService.contains("com.example.myapplication");
-           boolean isMyServiceActivePreviously = prevActiveServices.contains("com.example.myapplication");
-           if(!isMyServiceActive && isMyServiceActivePreviously){
+           boolean isMyServicePreviouslyActive = activeService.contains("com.example.myapplication");
+           if(!isMyServiceActive && isMyServicePreviouslyActive){
                 Intent serviceIntent = new Intent(context, NotificationService.class);
                 serviceIntent.putExtra("msg", "Toast detection service disabled");
                 context.startService(serviceIntent);
@@ -56,6 +56,7 @@ public class AccessibilityServiceChangeListener implements AccessibilityManager.
         }
         SharedPreferences.Editor editor = preferences.edit();
         Set<String> set = new HashSet<>(activeService);
+        Log.e("Test", set.toString());
         editor.putStringSet("notification_prefs", set);
 //        if (enabled) {
 //

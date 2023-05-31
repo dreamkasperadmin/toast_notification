@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SharedPreferences sharedPreferences = getSharedPreferences("notification_prefs", Context.MODE_PRIVATE);
         allowPermission = findViewById(R.id.allowPermission);
         makeToastBtn = findViewById(R.id.makeToast);
         apiTest = findViewById(R.id.apiTest);
