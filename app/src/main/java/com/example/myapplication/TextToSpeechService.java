@@ -85,11 +85,19 @@ package com.example.myapplication;
 //    }
 //}
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+
 import java.util.Locale;
 
 public class TextToSpeechService extends Service implements TextToSpeech.OnInitListener {
@@ -149,6 +157,8 @@ public class TextToSpeechService extends Service implements TextToSpeech.OnInitL
             tts.speak(text, TextToSpeech.QUEUE_ADD, null, null);
         }
     }
+
+
 }
 
 

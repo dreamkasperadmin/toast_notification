@@ -2,7 +2,9 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        SharedPreferences sharedPreferences = getSharedPreferences("notification_prefs", Context.MODE_PRIVATE);
         allowPermission = findViewById(R.id.allowPermission);
         makeToastBtn = findViewById(R.id.makeToast);
         apiTest = findViewById(R.id.apiTest);
